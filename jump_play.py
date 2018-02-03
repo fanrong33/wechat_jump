@@ -48,7 +48,7 @@ def find_location():
 
     cv2.imwrite('last.png', img_rgb)
 
-    return center1_loc[0], center1_loc[1], x_center, y_center
+    return img_rgb, center1_loc[0], center1_loc[1], x_center, y_center
 
 
 def get_center(img_canny, H):
@@ -57,7 +57,7 @@ def get_center(img_canny, H):
     y_top = np.nonzero([max(row) for row in img_canny[500:]])[0][0] + 500
     x_top = int(np.mean(np.nonzero(img_canny[y_top])))
 
-    y_bottom = y_top + 150
+    y_bottom = y_top + 150 # 应对花纹木纹等非纯色平面，默认一个至少150的高
     for row in range(y_bottom, H):
         if img_canny[row, x_top] != 0:
             y_bottom = row
@@ -65,6 +65,7 @@ def get_center(img_canny, H):
 
     x_center, y_center = x_top, (y_top + y_bottom) // 2
     return img_canny, x_center, y_center
+
 
 def jump(distance):
     print('distance: %s' % distance)
@@ -82,13 +83,19 @@ def main():
     while True:
         pull_screenshot()
 
-        piece_x, piece_y, board_x, board_y = find_location()
+        img, piece_x, piece_y, board_x, board_y = find_location()
 
         distance = math.sqrt((piece_x-board_x) ** 2 + (piece_y-board_y) ** 2)
 
         jump(distance)
 
         time.sleep(random.uniform(0.9, 1.2))
+
+        h, w = img.shape[:2]
+        res = cv2.resize(img, (int(w/3), int(h/3)), interpolation = cv2.INTER_CUBIC)
+        cv2.imshow('frame', res)
+        if cv2.waitKey(1) == ord('q'):
+            break
 
 # img_playground = cv2.resize(img_playground, (int(width/3), int(height/3)), interpolation = cv2.INTER_CUBIC)
 
