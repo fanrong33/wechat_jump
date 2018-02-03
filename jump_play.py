@@ -6,11 +6,11 @@ import random
 import os
 import math
 import time
+import screencap
 
-
-def pull_screenshot():
-    os.system('adb shell screencap -p /sdcard/autojump.png')
-    os.system('adb pull /sdcard/autojump.png .')
+# def pull_screenshot():
+#     os.system('adb shell screencap -p /sdcard/autojump.png')
+#     os.system('adb pull /sdcard/autojump.png .')
 
 def find_location():
     img_playground = cv2.imread('autojump.png', 1)
@@ -79,9 +79,10 @@ def jump(distance):
 
 
 def main():
+    screencap.check_screencap()
 
     while True:
-        pull_screenshot()
+        screencap.pull_screencap()
 
         img, piece_x, piece_y, board_x, board_y = find_location()
 
