@@ -7,6 +7,7 @@
 
 ### Plan 2
 神经网络
+https://github.com/zhanyongsheng/LetsJump
 
 ### Plan 3
 强化学习
